@@ -6,6 +6,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel; 
 use App\Imports\OrdersImport;
+use App\Models\UserLog;
 
 class OrderController extends Controller
 {
@@ -42,6 +43,14 @@ class OrderController extends Controller
         ]);
 
         $order = Order::create($validatedData);
+
+        UserLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'created_order',
+            'details' => 'Order ID: ' . $order->id,
+        ]);
+        
+
         return response()->json($order, 201);
     }
 
@@ -77,6 +86,13 @@ class OrderController extends Controller
         ]);
 
         $order->update($validatedData);
+
+        UserLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'order_updated',
+            'details' => 'Order ID: ' . $order->id,
+        ]);
+
         return response()->json($order);
     }
 
