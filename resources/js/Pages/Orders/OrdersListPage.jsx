@@ -27,6 +27,7 @@ function OrdersListPage() {
 
     const handleCloseForm = () => {
         setOpenForm(false);
+        setEditData({});
     };
 
     const handleEdit = (item) => {

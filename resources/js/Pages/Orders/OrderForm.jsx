@@ -3,7 +3,15 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 
 function OrderForm({ show, getData, onHide, editData }) {
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({
+        customer_name: "",
+        date: "",
+        payment_term: "",
+        due_date: "",
+        item_name: "",
+        amount: "",
+        quantity: "",
+    });
 
     const handleFieldChange = (e) => {
         setFormData((prev) => ({
@@ -13,101 +21,102 @@ function OrderForm({ show, getData, onHide, editData }) {
     };
 
     const handleSubmit = () => {
-        axios
-            .post("orders", formData)
-            .then((res) => {
-                if (res) {
+        axios({
+            method: editData?.id ? "put" : "post",
+            url: `orders${editData?.id ? "/" + editData?.id : ""}`,
+            data: formData,
+        })
+            .then((response) => {
+                if (response) {
                     getData();
                     setFormData({});
                     onHide();
                 }
             })
             .catch((error) => {
-                if (error) {
-                    console.log(error);
-                }
+                console.log(error);
             });
     };
 
     useEffect(() => {
-        if (editData) {
-            console.log(editData);
+        if (editData?.id) {
             setFormData({
-                customer_name: editData?.customer_name,
-                date: editData?.date,
-                payment_term: editData?.payment_term,
-                due_date: editData?.due_date,
-                item_name: editData?.item_name,
-                amount: editData?.amount,
-                quantity: editData?.quantity,
+                id: editData?.id,
+                customer_name: editData?.customer_name ?? "",
+                date: editData?.date ?? "",
+                payment_term: editData?.payment_term ?? "",
+                due_date: editData?.due_date ?? "",
+                item_name: editData?.item_name ?? "",
+                amount: editData?.amount ?? "",
+                quantity: editData?.quantity ?? "",
             });
         }
-    }, [editData]);
+    }, [editData?.id, show]);
 
     return (
-        <Modal show={show}>
+        <Modal show={show} size="lg" backdrop="static">
             <Modal.Title className="p-3">Create Order</Modal.Title>
             <Modal.Body className="p-3">
                 <Row>
-                    <Col xs={6}>
+                    <Col xs={6} className="mb-2">
                         <Form.Label>Customer Name</Form.Label>
                         <Form.Control
                             name="customer_name"
-                            value={FormData.customer_name}
+                            value={formData.customer_name}
                             onChange={(e) => handleFieldChange(e)}
                             type="text"
                         />
                     </Col>
-                    <Col xs={6}>
+                    <Col xs={6} className="mb-2">
                         <Form.Label>Payment Term</Form.Label>
                         <Form.Control
                             name="payment_term"
-                            value={FormData.peyment_term}
+                            value={formData.payment_term}
                             onChange={(e) => handleFieldChange(e)}
                             type="text"
                         />
                     </Col>
-                    <Col xs={6}>
+                    <Col xs={6} className="mb-2">
                         <Form.Label>Date</Form.Label>
                         <Form.Control
                             name="date"
-                            value={FormData.date}
+                            value={formData.date}
                             onChange={(e) => handleFieldChange(e)}
                             type="date"
                         />
                     </Col>
-                    <Col xs={6}>
+                    <Col xs={6} className="mb-2">
                         <Form.Label>Due Date</Form.Label>
                         <Form.Control
                             name="due_date"
-                            value={FormData.due_date}
+                            value={formData.due_date}
                             onChange={(e) => handleFieldChange(e)}
                             type="date"
                         />
                     </Col>
-                    <Col xs={6}>
+                    <Col xs={6} className="mb-2">
                         <Form.Label>Item Name</Form.Label>
                         <Form.Control
                             name="item_name"
-                            value={FormData.item_name}
+                            value={formData.item_name}
                             onChange={(e) => handleFieldChange(e)}
                             type="text"
                         />
                     </Col>
-                    <Col xs={6}>
+                    <Col xs={6} className="mb-2">
                         <Form.Label>Quantity</Form.Label>
                         <Form.Control
                             name="quantity"
-                            value={FormData.quantity}
+                            value={formData.quantity}
                             onChange={(e) => handleFieldChange(e)}
                             type="number"
                         />
                     </Col>
-                    <Col xs={6}>
+                    <Col xs={6} className="mb-2">
                         <Form.Label>Amount</Form.Label>
                         <Form.Control
                             name="amount"
-                            value={FormData.amount}
+                            value={formData.amount}
                             onChange={(e) => handleFieldChange(e)}
                             type="number"
                         />
