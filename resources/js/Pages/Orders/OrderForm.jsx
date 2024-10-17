@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 function OrderForm({ show, getData, onHide, editData }) {
     const [formData, setFormData] = useState({
@@ -28,13 +29,22 @@ function OrderForm({ show, getData, onHide, editData }) {
         })
             .then((response) => {
                 if (response) {
+                    if (editData) {
+                        toast.info("Order Successfully updated!");
+                    } else {
+                        toast.success("Order Successfully created!");
+                    }
                     getData();
                     setFormData({});
                     onHide();
                 }
             })
             .catch((error) => {
-                console.log(error);
+                if (error) {
+                    toast.error(
+                        "Somthing went wrong please contact admin for further support!"
+                    );
+                }
             });
     };
 
@@ -125,7 +135,7 @@ function OrderForm({ show, getData, onHide, editData }) {
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="success" onClick={handleSubmit}>
-                    Save
+                    {editData?.id ? "Update" : "Save"}
                 </Button>
                 <Button variant="danger" onClick={onHide}>
                     Cancel

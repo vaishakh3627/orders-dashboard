@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Table } from "react-bootstrap";
 import OrderForm from "./OrderForm";
+import { toast } from "react-toastify";
 
 function OrdersListPage() {
     const [openForm, setOpenForm] = useState(false);
@@ -15,9 +16,13 @@ function OrdersListPage() {
     const fetchOrders = async () => {
         try {
             const response = await axios.get("/orders");
-            setOrders(response.data);
+            setOrders(response?.data);
         } catch (error) {
-            console.error("Error fetching orders", error);
+            if (error) {
+                toast.error(
+                    "Somthing went wrong please contact admin for further support!"
+                );
+            }
         }
     };
 
@@ -33,6 +38,28 @@ function OrdersListPage() {
     const handleEdit = (item) => {
         setEditData(item);
         setOpenForm(true);
+    };
+
+    const handleDelete = (id) => {
+        if (id) {
+            axios
+                .delete(`orders/${id}`)
+                .then((res) => {
+                    if (res) {
+                        if (res) {
+                            toast.success("Order Successfully deleted!");
+                            fetchOrders();
+                        }
+                    }
+                })
+                .catch((error) => {
+                    if (error) {
+                        toast.error(
+                            "Somthing went wrong please contact admin for further support!"
+                        );
+                    }
+                });
+        }
     };
 
     return (
@@ -87,7 +114,12 @@ function OrdersListPage() {
                                                 >
                                                     Edit
                                                 </Button>
-                                                <Button variant="danger">
+                                                <Button
+                                                    variant="danger"
+                                                    onClick={() =>
+                                                        handleDelete(item?.id)
+                                                    }
+                                                >
                                                     Delete
                                                 </Button>
                                             </div>
