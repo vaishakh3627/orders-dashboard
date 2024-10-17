@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Table } from "react-bootstrap";
 import OrderForm from "./OrderForm";
 import { toast } from "react-toastify";
+import ImportButton from "../../Components/ImportButton";
 
 function OrdersListPage() {
     const [openForm, setOpenForm] = useState(false);
@@ -68,12 +69,15 @@ function OrdersListPage() {
                 <Card.Header>
                     <div className="d-flex align-items-center justify-content-between w-100">
                         Orders
-                        <Button
-                            variant="success"
-                            onClick={() => handleOpenForm()}
-                        >
-                            Create Order
-                        </Button>
+                        <div className="d-flex gap-1">
+                            <ImportButton />
+                            <Button
+                                variant="success"
+                                onClick={() => handleOpenForm()}
+                            >
+                                Create Order
+                            </Button>
+                        </div>
                     </div>
                 </Card.Header>
                 <Card.Body>

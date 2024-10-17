@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel; 
+use App\Imports\OrdersImport;
 
 class OrderController extends Controller
 {
@@ -85,5 +87,18 @@ class OrderController extends Controller
     {
         $order->delete();
         return response()->json($order);
+    }
+
+    public function import(Request $request)
+    {
+        // Validate the uploaded file
+        $request->validate([
+            'file' => 'required|max:2048', // Max size: 2MB
+        ]);
+
+        // Import the data from the uploaded file
+        Excel::import(new OrdersImport, $request->file('file'));
+
+        return redirect()->back()->with('success', 'Orders imported successfully.');
     }
 }
