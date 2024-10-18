@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('/orders', OrderController::class);
     Route::post('/orders/import', [OrderController::class, 'import'])->name('orders.import');
-    Route::get('/user/{userId}', [UserActivityController::class, 'getUserActivities']);
+    Route::get('/user/{userId}', [UserActivityController::class, 'getUserActivities'])->name('activity');
 });
 
 require __DIR__.'/auth.php';

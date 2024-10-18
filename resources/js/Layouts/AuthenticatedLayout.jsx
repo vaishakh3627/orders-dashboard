@@ -28,7 +28,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     href={route("dashboard")}
                                     active={route().current("dashboard")}
                                 >
-                                    Orders
+                                    Dashboard
                                 </NavLink>
                             </div>
                         </div>
@@ -65,6 +65,13 @@ export default function AuthenticatedLayout({ header, children }) {
                                             href={route("profile.edit")}
                                         >
                                             Profile
+                                        </Dropdown.Link>
+                                        <Dropdown.Link
+                                            href={route("activity", {
+                                                userId: user?.id,
+                                            })}
+                                        >
+                                            User Activity
                                         </Dropdown.Link>
                                         <Dropdown.Link
                                             href={route("logout")}
@@ -149,6 +156,13 @@ export default function AuthenticatedLayout({ header, children }) {
                         <div className="mt-3 space-y-1">
                             <ResponsiveNavLink href={route("profile.edit")}>
                                 Profile
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                href={route("activity", {
+                                    userId: user?.id,
+                                })}
+                            >
+                                User Activity
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 method="post"

@@ -36,8 +36,8 @@ class AuthenticatedSessionController extends Controller
 
         UserLog::create([
             'user_id' => auth()->id(),
-            'action' => 'user_logging',
-            'details' => 'User Logged In!',
+            'action' => 'user_loggin',
+            'details' => 'User Logged in!',
         ]);
 
         return redirect()->intended(route('dashboard', absolute: false));

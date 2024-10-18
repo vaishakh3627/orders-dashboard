@@ -4,6 +4,7 @@ import { Button, Card, Table } from "react-bootstrap";
 import OrderForm from "./OrderForm";
 import { toast } from "react-toastify";
 import ImportButton from "../../Components/ImportButton";
+import { Head } from "@inertiajs/react";
 
 function OrdersListPage() {
     const [openForm, setOpenForm] = useState(false);
@@ -67,6 +68,7 @@ function OrdersListPage() {
 
     return (
         <>
+            <Head title="Orders" />
             <Card>
                 <Card.Header>
                     <div className="d-flex align-items-center justify-content-between w-100">
