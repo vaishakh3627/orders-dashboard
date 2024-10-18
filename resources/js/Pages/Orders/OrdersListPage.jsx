@@ -17,7 +17,9 @@ function OrdersListPage() {
     const fetchOrders = async () => {
         try {
             const response = await axios.get("/orders");
-            setOrders(response?.data);
+            if (response?.data?.status) {
+                setOrders(response?.data?.data);
+            }
         } catch (error) {
             if (error) {
                 toast.error(
@@ -70,7 +72,7 @@ function OrdersListPage() {
                     <div className="d-flex align-items-center justify-content-between w-100">
                         Orders
                         <div className="d-flex gap-1">
-                            <ImportButton />
+                            <ImportButton getData={fetchOrders} />
                             <Button
                                 variant="success"
                                 onClick={() => handleOpenForm()}

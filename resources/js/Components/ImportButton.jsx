@@ -1,21 +1,19 @@
 import React, { useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import Papa from "papaparse";
+import { toast } from "react-toastify";
 
-function ImportButton() {
+function ImportButton({ getData }) {
     const [file, setFile] = useState(null);
-    const fileInputRef = useRef(null); // Ref to hidden input
+    const fileInputRef = useRef(null);
 
     const handleFileChange = (e) => {
-        setFile(e.target.files[0]); // Store selected file
+        setFile(e.target.files[0]);
     };
 
     const handleButtonClick = () => {
         if (!file) {
-            // Trigger file selection if no file is selected yet
             fileInputRef.current.click();
         } else {
-            // If file is already selected, upload it
             handleUpload();
         }
     };
@@ -28,11 +26,18 @@ function ImportButton() {
             const response = await axios.post("orders/import", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
-
-            alert(response.data.message || "Orders imported successfully!");
+            if (response?.data?.status) {
+                setFile(null);
+                getData();
+                toast.success("Order Successfully imported!");
+            }
         } catch (error) {
-            console.error("Upload error:", error);
-            alert("Failed to import orders.");
+            if (error) {
+                setFile(null);
+                toast.error(
+                    "Somthing went wrong please contact admin for further support!"
+                );
+            }
         }
     };
 
@@ -47,7 +52,7 @@ function ImportButton() {
             />
 
             <Button variant="dark" onClick={handleButtonClick}>
-                {file ? "Upload File" : "Select & Import"}
+                {file ? "Upload File" : "Select File"}
             </Button>
         </div>
     );

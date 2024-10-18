@@ -16,7 +16,11 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::orderBy('created_at', 'desc')->get();
-        return response()->json($orders);
+        return response()->json([
+            'message' => 'Orders Successfully retrived!',
+            'status' => true,
+            'data' => $orders
+        ], 200);
     }
 
     /**
@@ -41,17 +45,17 @@ class OrderController extends Controller
             'quantity' => 'required|integer',
             'amount' => 'required|numeric',
         ]);
-
         $order = Order::create($validatedData);
-
         UserLog::create([
             'user_id' => auth()->id(),
             'action' => 'created_order',
             'details' => 'Order ID: ' . $order->id,
         ]);
-        
-
-        return response()->json($order, 201);
+        return response()->json([
+            'message' => 'Orders Successfully created!',
+            'status' => true,
+            'data' => $order
+        ], 200);
     }
 
     /**
@@ -84,16 +88,17 @@ class OrderController extends Controller
             'quantity' => 'required|integer',
             'amount' => 'required|numeric',
         ]);
-
         $order->update($validatedData);
-
         UserLog::create([
             'user_id' => auth()->id(),
             'action' => 'order_updated',
             'details' => 'Order ID: ' . $order->id,
         ]);
-
-        return response()->json($order);
+        return response()->json([
+            'message' => 'Orders Successfully updated!',
+            'status' => true,
+            'data' => $order
+        ], 200);
     }
 
     /**
@@ -102,19 +107,34 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         $order->delete();
-        return response()->json($order);
+        UserLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'order_deleted',
+            'details' => 'Order ID: ' . $order->id,
+        ]);
+        return response()->json([
+            'message' => 'Orders Successfully deleted!',
+            'status' => true,
+            'data' => $order
+        ], 200);
     }
 
     public function import(Request $request)
     {
-        // Validate the uploaded file
         $request->validate([
-            'file' => 'required|max:2048', // Max size: 2MB
+            'file' => 'required|max:2048', 
         ]);
-
-        // Import the data from the uploaded file
         Excel::import(new OrdersImport, $request->file('file'));
 
-        return redirect()->back()->with('success', 'Orders imported successfully.');
+        UserLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'order_import',
+            'details' => 'Orders Imported',
+        ]);
+
+        return response()->json([
+            'message' => 'Excel successfully imported!',
+            'status' => true,
+        ], 200);
     }
 }

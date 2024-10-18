@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\UserLog;
 
 class RegisteredUserController extends Controller
 {
@@ -44,7 +45,19 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        UserLog::create([
+            'user_id' => $user->id,
+            'action' => 'user_registration',
+            'details' => 'User Registered!',
+        ]);
+
         Auth::login($user);
+
+        UserLog::create([
+            'user_id' => $user->id,
+            'action' => 'user_logging',
+            'details' => 'User Logged In!',
+        ]);
 
         return redirect(route('dashboard', absolute: false));
     }
