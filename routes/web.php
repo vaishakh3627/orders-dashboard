@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserActivityController;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -25,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('/orders', OrderController::class);
     Route::post('/orders/import', [OrderController::class, 'import'])->name('orders.import');
+    Route::get('/user/{userId}', [UserActivityController::class, 'getUserActivities']);
 });
 
 require __DIR__.'/auth.php';
